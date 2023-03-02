@@ -33,3 +33,19 @@ SELECT c.company_name, o.order_id, SUM(od.quantity) FROM orders o
 JOIN order_details od ON o.order_id = od.order_id 
 JOIN customers c ON o.customer_id = c.customer_id 
 GROUP BY o.order_id, c.company_name;
+
+WITH names AS (
+    SELECT company_name FROM customers 
+    UNION ALL 
+    SELECT company_name FROM suppliers 
+    UNION ALL 
+    SELECT company_name FROM shippers
+) SELECT company_name FROM names
+WHERE company_name LIKE 'D%';
+
+SELECT p.product_name FROM products p 
+WHERE EXISTS(
+    SELECT * FROM categories c 
+    WHERE c.category_id = p.category_id 
+    AND c.category_name LIKE 'C%'
+);
