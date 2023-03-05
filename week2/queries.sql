@@ -27,7 +27,9 @@ ORDER BY city DESC;
 -- Hint: To check if a product is discontinued, use the WHERE clause to
 -- filter for rows/records where the discontinued field is equal to true. 
 
-
+SELECT product_id, product_name FROM products
+WHERE discontinued = 'True'
+ORDER BY product_id;
 
 -- 1.4
 -- Select the first_name and last_name from the employees table, of
@@ -35,7 +37,9 @@ ORDER BY city DESC;
 -- (i.e. those WHERE the reports_to field IS NULL).
 -- Order the results by employee_id.
 
-
+SELECT first_name, last_name FROM employees
+WHERE reports_to IS NULL
+ORDER BY employee_id;
 
 -- 1.5
 -- Select the product_name of each product where the units_in_stock is 
@@ -50,7 +54,9 @@ ORDER BY city DESC;
 -- Then add each of the clauses, one by one, testing after each one,
 -- until you reach the final result.
 
-
+SELECT product_name FROM products
+WHERE units_in_stock <= reorder_level AND discontinued = 'False' AND units_on_order > 0
+ORDER BY product_id;
 
 
 -- PART 2: FUNCTIONS AND GROUPING ------------------------------------------
@@ -64,7 +70,7 @@ ORDER BY city DESC;
 -- How many orders have been made?
 -- Write a SELECT query that will count all rows/records in the orders table.
 
-
+SELECT COUNT(*) FROM orders;
 
 -- 2.2
 -- How many orders has each customer made?
@@ -75,7 +81,9 @@ ORDER BY city DESC;
 -- Think carefully about how this query answers the question, how many
 -- orders has each customer made?
 
-
+SELECT customer_id, COUNT(order_id) AS order_count FROM orders
+GROUP BY customer_id
+ORDER BY order_count DESC;
 
 -- 2.3
 -- Which ship_address are we shipping the most orders to?
@@ -93,7 +101,10 @@ ORDER BY city DESC;
 -- science application! We will take a closer look at data science and
 -- data visualizations in a future lesson.
 
-
+SELECT ship_address, COUNT(order_id) AS order_count FROM orders
+GROUP BY ship_address
+ORDER BY order_count DESC
+LIMIT 1;
 
 -- 2.4
 -- Let's say we want to offer a new freight discount, but only to customers
@@ -108,7 +119,10 @@ ORDER BY city DESC;
 -- is more than $500. 
 -- Order the results by customer_id.
 
-
+SELECT customer_id, SUM(freight) from orders
+GROUP BY customer_id
+HAVING SUM(freight) > 500
+ORDER BY customer_id;
 
 -- 2.5
 -- Let's say we want to analyze possibly consolidating the shippers we use.
@@ -134,10 +148,10 @@ ORDER BY city DESC;
 -- was created by the WITH query).
 
 WITH shippers_per_customer AS (
-    -- Delete this line and replace it with your first SELECT query to create the CTE.
+    SELECT COUNT(DISTINCT ship_via) AS shipper_count FROM orders
+    GROUP BY customer_id
 ) 
--- Delete this line and replace it with your second SELECT query using the CTE.
-
+SELECT AVG(shipper_count) FROM shippers_per_customer;
 
 
 
