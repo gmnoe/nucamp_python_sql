@@ -4,9 +4,9 @@
 -- zero or more categories, and they want the database to keep track of who is
 -- an expert in what. 
 -- Q: How will you satisfy this new requirement? 
--- A:
+-- A: Create employee_category table and link category_ids to employee_id respectively
 -- Q: What type of relationship is this? (e.g. 1-1, 1-many, or many-to-many?)
--- A: 
+-- A: 1-many
 -- Fill in your answer above. 
 
 
@@ -22,6 +22,11 @@
 -- that the employees_categories has been created with the expected columns
 -- and primary key. Place your answer in the blank space below. 
 
+CREATE TABLE employees_categories (
+    employee_id INT,
+    category_id INT,
+    PRIMARY KEY (employee_id, category_id)
+);
 
 
 -- 4.2: Alter table
@@ -34,7 +39,10 @@
 -- Test your answer in pgAdmin or psql and verify that it worked correctly, then
 -- place it in the blank space below.
 
-
+ALTER TABLE employees_categories
+ADD CONSTRAINT fk_ec_employees
+FOREIGN KEY (employee_id)
+REFERENCES employees;
 
 -- 4.3: Alter table
 -- Write an ALTER TABLE statement on the employees_categories table. Use it to add
@@ -46,7 +54,10 @@
 -- Test your answer in pgAdmin or psql and verify that it worked correctly, then
 -- place it in the blank space below.
 
-
+ALTER TABLE employees_categories
+ADD CONSTRAINT fk_ec_categories
+FOREIGN KEY (category_id)
+REFERENCES categories;
 
 -- 4.4: Insert records
 -- Write an INSERT statement that inserts the following employee ID, category ID pairs 
@@ -56,7 +67,8 @@
 -- Test your answer in pgAdmin or psql and verify that it worked correctly, then
 -- place it in the blank space below.
 
-
+INSERT INTO employees_categories (employee_id, category_id) VALUES 
+(1,2), (3,4), (4,3), (4,4), (8,2), (1,8), (1,3), (1,6);
 
 -- 4.5: Remove records
 -- Write a statement that deletes all records from employees_categories but does not 
@@ -67,7 +79,7 @@
 -- Test your answer in pgAdmin or psql and verify that it worked correctly, then
 -- place it in the blank space below.
 
-
+TRUNCATE employees_categories;
 
 -- Bonus Task (optional)
 -- Refer to the new management decision at the top of this file.  
@@ -90,3 +102,5 @@
 --
 -- Test your answer in pgAdmin or psql and verify that it worked correctly, then
 -- place it in the blank space below.
+
+DROP TABLE employees_categories;
