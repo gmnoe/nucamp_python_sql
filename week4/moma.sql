@@ -41,3 +41,31 @@ LIMIT 50;
 INSERT INTO moma_artists (info) VALUES (
     json_object('{display_name, nationality}', '{Ablade Glover, Ghanaian}')
 );
+
+-- Get number of redundant artist values
+SELECT COUNT(artist) - COUNT(DISTINCT artist)
+FROM moma_works;
+
+-- Find artist with the most redundant values
+SELECT COUNT(*), artist
+FROM moma_works
+GROUP BY artist
+ORDER BY count DESC;
+
+-- Indexes in moma db
+SELECT * FROM pg_indexes;
+
+CREATE INDEX moma_works_btree_index ON moma_works(artist);
+
+SELECT tablename, indexname, indexdef FROM pg_indexes WHERE tablename NOT LIKE 'pg_%';
+SELECT title FROM moma_works WHERE artist = 'Frank Lloyd Wright';
+
+DROP INDEX moma_works_btree_index;
+CREATE INDEX moma_works_hash_index ON moma_works USING HASH (artist);
+
+-- Postgres Query Planner, only works in pgAdmin
+EXPLAIN SELECT date_acquired FROM moma_works 
+WHERE date_acquired BETWEEN '1950-01-01' AND '1959-12-31';
+
+EXPLAIN ANALYZE SELECT date_acquired FROM moma_works 
+WHERE date_acquired BETWEEN '1950-01-01' AND '1959-12-31';
