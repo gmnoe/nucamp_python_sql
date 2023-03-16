@@ -156,7 +156,7 @@ task4()
 def task5():
     """Perform Task 5."""
 
-    title = "Acquisitions by Date"  # TODO task 5
+    title = "Cumulative Count of Acquired Artwork"  
     query = """
             WITH daily_acquisition_count AS (
                 SELECT date_acquired, COUNT(*) FROM moma_works 
